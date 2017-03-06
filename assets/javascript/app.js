@@ -1,44 +1,51 @@
 var topics = ["monkeys", "dogs", "cats", "alligators", "turtles", "bunnies"];
 
-research these: q, limit, rating
-
-for (var i = 0; i < topics.length; i++) {
-	//append topic button
-	console.log(topics[i]);
-	var p = $("<p>").text(topics[i]);
-	var newButton = $("<button attr='animals'>");
-	$("#newbuttons").prepend(newButton);
-	newButton.prepend(p);
+function displayGif() {
+    var movie = $(this).attr("data-name");
+    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + topicClicked + "&api_key=dc6zaTOxFJmzC&limit=10";
+    $(".animals").on("click", function() {
+	    $.ajax({
+	        url: queryURL,
+	        method: "GET"
+	    }).done(function(response) {
+	        var results = response.data;
+	        for (var i = 0; i < results.length; i++) {
+	            var gifDiv = $("<div class='item'>");
+	            var rating = results[i].rating;
+	            var p = $("<p>").text("Rating: " + rating);
+	            var animalImage = $("<img>");
+	            animalImage.attr("src", results[i].images.fixed_height_still.url);
+	            $("#gifs-appear-here").prepend(gifDiv);
+	            gifDiv.prepend(p);
+	            gifDiv.prepend(animalImage); 
+	        }
+	    });
+	});
 }
 
-var apiKey = "dc6zaTOxFJmzC";
+function renderButtons() {
+    $("#buttons-view").empty();
+      
+    for (var i = 0; i < topics.length; i++) {
+    	console.log(topics[i]);
+        var a = $("<button>");
+        a.addClass("animals");
+        a.addClass("btn btn-outline-secondary");
+        a.attr("data-name", topics[i]);
+        a.text(topics[i]);
+        $("#buttons-view").append(a);
+    }
+}
 
-var host = api.giphy.com;
+$("#add-gif").on("click", function(event) {
+    event.preventDefault();
+    var animal = $("#topicInput").val().trim();
+    topics.push(animal);
+    renderButtons();
+});
 
-$("#thistext").val("value");
-
-    $("button").on("click", function() {
-      var topicClicked = $(this).attr("animals");
-      var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
-        topicClicked + "&api_key=dc6zaTOxFJmzC&limit=10";
-      $.ajax({
-          url: queryURL,
-          method: "GET"
-        })
-        .done(function(response) {
-          var results = response.data;
-          for (var i = 0; i < results.length; i++) {
-            var gifDiv = $("<div class='item'>");
-            var rating = results[i].rating;
-            var p = $("<p>").text("Rating: " + rating);
-            var animalImage = $("<img>");
-            animalImage.attr("src", results[i].images.fixed_height.url);
-            $("#gifs-appear-here").prepend(gifDiv);
-            gifDiv.prepend(p);
-            gifDiv.prepend(animalImage); 
-          }
-        });
-    });
+$(document).on("click", ".animals", displayGif);
+renderButtons();
 
 //Your app should take the topics in this array and create buttons in your HTML.
 //Try using a loop that appends a button for each string in the array.

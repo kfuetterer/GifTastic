@@ -1,8 +1,10 @@
+window.onload = function () {
+
 var topics = ["monkeys", "dogs", "cats", "alligators", "turtles", "bunnies"];
 
 function displayGif() {
-    var movie = $(this).attr("data-name");
-    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + topicClicked + "&api_key=dc6zaTOxFJmzC&limit=10";
+    var gif = $(this).attr("data-name");
+    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + gif + "&api_key=dc6zaTOxFJmzC&limit=10";
     $(".animals").on("click", function() {
 	    $.ajax({
 	        url: queryURL,
@@ -30,7 +32,7 @@ function renderButtons() {
     	console.log(topics[i]);
         var a = $("<button>");
         a.addClass("animals");
-        a.addClass("btn btn-outline-secondary");
+        a.addClass("btn btn-secondary");
         a.attr("data-name", topics[i]);
         a.text(topics[i]);
         $("#buttons-view").append(a);
@@ -46,6 +48,8 @@ $("#add-gif").on("click", function(event) {
 
 $(document).on("click", ".animals", displayGif);
 renderButtons();
+
+}
 
 //Your app should take the topics in this array and create buttons in your HTML.
 //Try using a loop that appends a button for each string in the array.
